@@ -73,4 +73,10 @@ class PowerUp {
         c.fill();
         c.closePath();
     }
+
+    update() {
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+        this.draw();
+ }
 }
