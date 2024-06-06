@@ -20,7 +20,7 @@ class Grid {
     for (let x = 0; x < columns; x++) {
       for (let y = 0; y < rows; y++) {
         this.invaders.push(
-          new Invaders({
+          new Invader({
             position: {
               x: x * 30,
               y: y * 30
