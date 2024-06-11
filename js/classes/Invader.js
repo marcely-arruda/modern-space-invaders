@@ -44,7 +44,7 @@ class Invader {
       new invaderProjectile({
         position: {
           x: this.position.x + this.width / 2,
-          y: this.position.y + this.height 
+          y: this.position.y + this.height
         },
         velocity: {
           x: 0,
