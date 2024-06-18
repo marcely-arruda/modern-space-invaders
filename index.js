@@ -255,10 +255,10 @@ function animate() {
       }
     }
 
-    if(projectile.position.y + particles.radius <= 0) {
-        projectiles.splice(i, 1);
+    if (projectile.position.y + particles.radius <= 0) {
+      projectiles.splice(i, 1);
     } else {
-        projectile.update();
+      projectile.update();
     }
   }
 
@@ -266,19 +266,19 @@ function animate() {
     grid.update();
     if (frames % 100 === 0 && grid.invaders.length > 0) {
       grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(
-      invaderProjectiles
+        invaderProjectiles
       );
     }
 
-    for(let i = grid.invaders.length - 1; i >= 0; i--) {
+    for (let i = grid.invaders.length - 1; i >= 0; i--) {
       const invader = grid.invaders[i];
       invader.update({ velocity: grid.velocity });
 
-      for(let j = bombs.length - 1; j >= 0; j--) {
+      for (let j = bombs.length - 1; j >= 0; j--) {
         const bomb = bombs[j];
         const invaderRadius = 15;
 
-        if(
+        if (
           Math.hypot(
             invader.position.x - bomb.position.x,
             invader.position.y - bomb.position.y
@@ -303,13 +303,13 @@ function animate() {
       }
 
       projectiles.forEach((projectile, j) => {
-        if(
+        if (
           projectile.position.y - projectile.radius <=
-          invader.position.y + invader.height &&
-          projectile.position.x + projectile.radius >= invader.position.x  &&
+            invader.position.y + invader.height &&
+          projectile.position.x + projectile.radius >= invader.position.x &&
           projectile.position.x - projectile.radius <=
-          invader.position.x + invader.width && 
-          projectile.position.y + projectile.radius >= invader.position.y 
+            invader.position.x + invader.width &&
+          projectile.position.y + projectile.radius >= invader.position.y
         ) {
           setTimeout(() => {
             const invaderFound = grid.invaders.find(
@@ -320,7 +320,7 @@ function animate() {
               (projectile2) => projectile2 === projectile
             );
 
-            if(invaderFound && projectileFound) {
+            if (invaderFound && projectileFound) {
               score += 100;
               scoreEl.innerHTML = score;
 
@@ -337,32 +337,46 @@ function animate() {
               grid.invaders.splice(i, 1);
               projectiles.splice(j, 1);
 
-              if(grid.invader.length > 0) {
+              if (grid.invader.length > 0) {
                 const firstInvader = grid.invaders[0];
                 const lastInvader = grid.invaders[grid.invaders.length - 1];
 
-                grid.width = 
-                lastInvader.position.x -
-                firstInvader.position.x +
-                lastInvader.width;
+                grid.width =
+                  lastInvader.position.x -
+                  firstInvader.position.x +
+                  lastInvader.width;
 
                 grid.position.x = firstInvader.position.x;
               } else {
                 grids.splice(gridIndex, 1);
-              } 
+              }
             }
           }, 0);
         }
       });
 
-      if(
+      if (
         rectangularCollision({
           rectangle1: invader,
           rectangle2: player
         }) &&
         !game.over
       )
-      endGame();
+        endGame();
     }
   });
+
+  if (keys.ArrowLeft.pressed && player.position.x >= 0) {
+    player.velocity.x = -7;
+    player.rotation = -0.15;
+  } else if (
+    keys.ArrowRight.pressed &&
+    player.position.x + player.width <= canvas.width
+  ) {
+    player.velocity.x = 7;
+    player.rotation = 0.15;
+  } else {
+    player.velocity.x = 0;
+    player.rotation = 0;
+  }
 }
