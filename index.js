@@ -34,11 +34,9 @@ let game = {
 };
 
 let score = 0;
-
 let spawnBuffer = 500;
 let fps = 60;
 let fpsInterval = 1000 / fps;
-
 let msPrev = window.performance.now();
 
 function init() {
@@ -64,7 +62,6 @@ function init() {
 
   frames = 0;
   randomInterval = Math.floor(Math.random() * 500 + 500);
-
   game = {
     over: false,
     active: true
@@ -74,7 +71,7 @@ function init() {
 
   for (let i = 0; i < 100; i++) {
     particles.push(
-      new particle({
+      new Particle({
         position: {
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height
@@ -103,7 +100,7 @@ function endGame() {
     document.querySelector("#restartScreen").style.display = "flex";
   }, 2000);
 
-  creatParticles({
+  createParticles({
     object: player,
     color: "white",
     fades: true
@@ -176,7 +173,7 @@ function animate() {
     const particle = player.particles[i];
     particle.update();
 
-    if (particle.opacity === 0) player.particles[1].splice(i, 1);
+    if (particle.opacity === 0) player.particles[i].splice(i, 1);
   }
 
   particles.forEach((particle, i) => {
@@ -255,7 +252,7 @@ function animate() {
       }
     }
 
-    if (projectile.position.y + particles.radius <= 0) {
+    if (projectile.position.y + projectile.radius <= 0) {
       projectiles.splice(i, 1);
     } else {
       projectile.update();
@@ -264,6 +261,7 @@ function animate() {
 
   grids.forEach((grid, gridIndex) => {
     grid.update();
+
     if (frames % 100 === 0 && grid.invaders.length > 0) {
       grid.invaders[Math.floor(Math.random() * grid.invaders.length)].shoot(
         invaderProjectiles
@@ -276,6 +274,7 @@ function animate() {
 
       for (let j = bombs.length - 1; j >= 0; j--) {
         const bomb = bombs[j];
+
         const invaderRadius = 15;
 
         if (
@@ -290,12 +289,12 @@ function animate() {
           scoreEl.innerHTML = score;
 
           grid.invaders.splice(i, 1);
-          creatScoreLabel({
+          createScoreLabel({
             object: invader,
             score: 50
           });
 
-          creatParticles({
+          createParticles({
             object: invader,
             fades: true
           });
@@ -315,7 +314,6 @@ function animate() {
             const invaderFound = grid.invaders.find(
               (invader2) => invader2 === invader
             );
-
             const projectileFound = projectiles.find(
               (projectile2) => projectile2 === projectile
             );
@@ -324,11 +322,11 @@ function animate() {
               score += 100;
               scoreEl.innerHTML = score;
 
-              creatScoreLabel({
+              createScoreLabel({
                 object: invader
               });
 
-              creatParticles({
+              createParticles({
                 object: invader,
                 fades: true
               });
@@ -337,7 +335,7 @@ function animate() {
               grid.invaders.splice(i, 1);
               projectiles.splice(j, 1);
 
-              if (grid.invader.length > 0) {
+              if (grid.invaders.length > 0) {
                 const firstInvader = grid.invaders[0];
                 const lastInvader = grid.invaders[grid.invaders.length - 1];
 
@@ -345,7 +343,6 @@ function animate() {
                   lastInvader.position.x -
                   firstInvader.position.x +
                   lastInvader.width;
-
                 grid.position.x = firstInvader.position.x;
               } else {
                 grids.splice(gridIndex, 1);
@@ -380,23 +377,23 @@ function animate() {
     player.rotation = 0;
   }
 
-  if(frames % randomInterval === 0) {
+  if (frames % randomInterval === 0) {
     spawnBuffer = spawnBuffer < 0 ? 100 : spawnBuffer;
-    grid.push(new Grid());
+    grids.push(new Grid());
     randomInterval = Math.floor(Math.random() * 500 + spawnBuffer);
     frames = 0;
     spawnBuffer -= 100;
   }
 
   if (
-    keys.space.pressed && 
+    keys.space.pressed &&
     player.powerUp === "Metralhadora" &&
     frames % 2 === 0 &&
     !game.over
   ) {
-    if(frames % 6 === 0) audio.shoot.play();
+    if (frames % 6 === 0) audio.shoot.play();
     projectiles.push(
-      new projectile ({
+      new Projectile({
         position: {
           x: player.position.x + player.width / 2,
           y: player.position.y
@@ -409,10 +406,11 @@ function animate() {
       })
     );
   }
-  frames ++;
+
+  frames++;
 }
 
-document.querySelector(`#startButton`).addEventListener("click", () => {
+document.querySelector("#startButton").addEventListener("click", () => {
   audio.backgroundMusic.play();
   audio.start.play();
 
@@ -422,17 +420,17 @@ document.querySelector(`#startButton`).addEventListener("click", () => {
   animate();
 });
 
-document.querySelector("#restartScreen").addEventListener("click", () => {
+document.querySelector("#restartButton").addEventListener("click", () => {
   audio.select.play();
   document.querySelector("#restartScreen").style.display = "none";
   init();
   animate();
 });
 
-addEventListener("keydown", ({key}) => {
-  if(game.over) return;
+addEventListener("keydown", ({ key }) => {
+  if (game.over) return;
 
-  switch(key) {
+  switch (key) {
     case "ArrowLeft":
       keys.ArrowLeft.pressed = true;
       break;
@@ -441,12 +439,12 @@ addEventListener("keydown", ({key}) => {
       break;
     case " ":
       keys.space.pressed = true;
-      
-      if(player.powerUp === "Metralhadora") return;
+
+      if (player.powerUp === "Metralhadora") return;
 
       audio.shoot.play();
       projectiles.push(
-        new projectile ({
+        new Projectile({
           position: {
             x: player.position.x + player.width / 2,
             y: player.position.y
@@ -457,12 +455,13 @@ addEventListener("keydown", ({key}) => {
           }
         })
       );
+
       break;
   }
 });
 
-addEventListener("keyup", ({key}) => {
-  switch(key) {
+addEventListener("keyup", ({ key }) => {
+  switch (key) {
     case "ArrowLeft":
       keys.ArrowLeft.pressed = false;
       break;
@@ -471,6 +470,7 @@ addEventListener("keyup", ({key}) => {
       break;
     case " ":
       keys.space.pressed = false;
+
       break;
   }
 });

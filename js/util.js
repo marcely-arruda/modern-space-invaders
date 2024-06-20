@@ -1,5 +1,5 @@
 function randomBetween(min, max) {
-  return Math.random() * (max - min + 1) + min;
+  return Math.random() * (max - min) + min;
 }
 
 function createScoreLabel({ score = 100, object }) {
@@ -7,8 +7,8 @@ function createScoreLabel({ score = 100, object }) {
   scoreLabel.innerHTML = score;
   scoreLabel.style.position = "absolute";
   scoreLabel.style.color = "white";
-  scoreLabel.style.left = object.position.x + "px";
   scoreLabel.style.top = object.position.y + "px";
+  scoreLabel.style.left = object.position.x + "px";
   scoreLabel.style.userSelect = "none";
 
   document.querySelector("#parentDiv").appendChild(scoreLabel);
@@ -44,7 +44,7 @@ function createParticles({ object, color, fades }) {
           y: (Math.random() - 0.5) * 2
         },
         radius: Math.random() * 3,
-        color: color || "#DAA0DE",
+        color: color || "#BAA0DE",
         fades
       })
     );

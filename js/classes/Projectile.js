@@ -1,4 +1,4 @@
-class projectile {
+class Projectile {
   constructor({ position, velocity, color = "red" }) {
     this.position = position;
     this.velocity = velocity;
